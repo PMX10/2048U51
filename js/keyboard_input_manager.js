@@ -75,6 +75,18 @@ KeyboardInputManager.prototype.listen = function () {
       event.preventDefault();
       self.emit("restore");
     }
+
+    // 1 key stores one gameboard configuration
+    if (!modifiers && event.which === 49) {
+      event.preventDefault();
+      self.emit("store");
+    }
+
+    // 2 key replaces current gameboard configuration with stored configuration
+    if (!modifiers && event.which === 50) {
+      event.preventDefault();
+      self.emit("paint");
+    }
   });
 
   // Respond to button presses
