@@ -5,11 +5,14 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.actuator       = new Actuator;
   this.undo           = [this.storageManager.getGameState()];
   this.previousState  = this.undo[0];
+  this.stored         = null;
 
   this.startTiles     = 2;
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restore", this.restore.bind(this));
+  this.inputManager.on("store", this.store.bind(this));
+  this.inputManager.on("paint", this.paint.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
@@ -24,23 +27,17 @@ GameManager.prototype.restart = function () {
   this.undo.unshift(this.storageManager.getGameState());
   var tempUndo = this.undo.slice(0);
   this.storageManager.clearGameState();
-  console.log(this.undo);
   this.actuator.continueGame(); // Clear the game won/lost message
-  console.log(this.undo);
   this.previousState = this.storageManager.getGameState();
-  console.log(this.undo);
   this.setup();
-  console.log(this.undo);
   this.undo = tempUndo.slice(0);
   this.previousState = this.undo[0];
 };
 
 // Restore game setting before the last move
 GameManager.prototype.restore = function () {
-  console.log("restoring from: "+this.undo);
   if(this.isGameTerminated()){
-    console.log("game is terminated");
-    this.restart();
+    this.actuator.continueGame();
   }
   if(this.undo.length > 1){
     this.undo.shift();
@@ -48,6 +45,16 @@ GameManager.prototype.restore = function () {
   this.setup();
 };
 
+// Store the current gameboard configuration
+GameManager.prototype.store = function () {
+  this.stored = this.storageManager.getGameState();
+};
+
+// Replace the current gameboard configuration with stored configuration
+GameManager.prototype.paint = function () {
+  this.previousState = this.stored;
+  this.setup();
+};
 
 // Keep playing after winning (allows going over 2048)
 GameManager.prototype.keepPlaying = function () {
