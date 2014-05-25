@@ -72,26 +72,26 @@ KeyboardInputManager.prototype.listen = function () {
 
     // T key restores the game state before last move
     if (!modifiers && event.which === 84) {
-      event.preventDefault();
-      self.emit("restore");
+      self.restart.call(self, event);
     }
 
     // 1 key stores one gameboard configuration
     if (!modifiers && event.which === 49) {
-      event.preventDefault();
-      self.emit("store");
+      self.restart.call(self, event);
     }
 
     // 2 key replaces current gameboard configuration with stored configuration
     if (!modifiers && event.which === 50) {
-      event.preventDefault();
-      self.emit("paint");
+      self.restart.call(self, event);
     }
   });
 
   // Respond to button presses
   this.bindButtonPress(".retry-button", this.restart);
   this.bindButtonPress(".restart-button", this.restart);
+  this.bindButtonPress(".restore-button", this.restore);
+  this.bindButtonPress(".store-button", this.store);
+  this.bindButtonPress(".paint-button", this.paint);
   this.bindButtonPress(".keep-playing-button", this.keepPlaying);
 
   // Respond to swipe events
@@ -153,6 +153,21 @@ KeyboardInputManager.prototype.listen = function () {
 KeyboardInputManager.prototype.restart = function (event) {
   event.preventDefault();
   this.emit("restart");
+};
+
+KeyboardInputManager.prototype.restore = function (event) {
+  event.preventDefault();
+  this.emit("restore");
+};
+
+KeyboardInputManager.prototype.store = function (event) {
+  event.preventDefault();
+  this.emit("store");
+};
+
+KeyboardInputManager.prototype.paint = function (event) {
+  event.preventDefault();
+  this.emit("paint");
 };
 
 KeyboardInputManager.prototype.keepPlaying = function (event) {
