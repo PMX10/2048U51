@@ -72,17 +72,17 @@ KeyboardInputManager.prototype.listen = function () {
 
     // T key restores the game state before last move
     if (!modifiers && event.which === 84) {
-      self.restart.call(self, event);
+      self.restore.call(self, event);
     }
 
     // 1 key stores one gameboard configuration
     if (!modifiers && event.which === 49) {
-      self.restart.call(self, event);
+      self.store.call(self, event);
     }
 
     // 2 key replaces current gameboard configuration with stored configuration
     if (!modifiers && event.which === 50) {
-      self.restart.call(self, event);
+      self.paint.call(self, event);
     }
   });
 
